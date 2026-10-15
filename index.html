@@ -70,7 +70,7 @@
       <h1 class="font-bold text-xs sm:text-base tracking-tight">PhotoFrame <span class="hidden sm:inline-block text-[11px] font-normal text-blue-400 bg-blue-950/80 border border-blue-800 px-1.5 py-0.5 rounded">Studio</span></h1>
     </div>
 
-    <!-- 追加：モード切換トグル（ロゴと保存ボタンの間） -->
+    <!-- モード切換トグル -->
     <div class="flex items-center bg-gray-950 border border-gray-800 p-0.5 rounded-lg text-[11px] sm:text-xs font-semibold shrink-0">
       <button type="button" data-app-mode="frame" class="app-mode-btn px-2.5 sm:px-3 py-1 rounded-md bg-blue-600 text-white shadow transition flex items-center gap-1">
         <i data-lucide="frame" class="w-3.5 h-3.5 hidden sm:inline"></i>
@@ -123,9 +123,9 @@
           <span id="infoIndex">1 / 1</span>
         </div>
 
-        <div id="dragHintBadge" class="hidden absolute bottom-2.5 left-1/2 -translate-x-1/2 bg-gray-900/85 backdrop-blur border border-gray-700/80 text-[11px] text-blue-300 px-3 py-1 rounded-full flex items-center gap-1.5 pointer-events-none shadow-lg">
+        <div id="dragHintBadge" class="hidden absolute bottom-2.5 left-1/2 -translate-x-1/2 bg-gray-900/90 backdrop-blur border border-gray-700/80 text-[11px] text-blue-300 px-3 py-1 rounded-full flex items-center gap-1.5 pointer-events-none shadow-lg whitespace-nowrap">
           <i data-lucide="move" class="w-3.5 h-3.5"></i>
-          <span id="dragHintText">画像をドラッグして位置を調整</span>
+          <span id="dragHintText">ドラッグで位置調整</span>
         </div>
 
         <div id="topRightOverlayBtns" class="hidden absolute top-2.5 right-2.5 flex items-center gap-1.5">
@@ -280,7 +280,7 @@
     </section>
 
     <!-- ==========================================
-         2. 追加：クロップ（切り抜き）専用サイドバー
+         2. クロップ（切り抜き）専用サイドバー
     =========================================== -->
     <section id="sidebar-crop" class="control-sidebar hidden bg-gray-900 shrink-0 z-20 flex flex-col">
       <div class="px-3.5 py-2.5 border-b border-gray-800 text-xs font-semibold bg-gray-950/50 flex items-center justify-between shrink-0">
@@ -295,48 +295,46 @@
       </div>
 
       <div class="p-3.5 overflow-y-auto space-y-3.5 text-xs flex-1">
+        <!-- 比率選択 + 縦横切替UI -->
         <div class="space-y-2">
-          <span class="text-gray-300 font-semibold block">アスペクト比を選択</span>
-          <div class="grid grid-cols-5 gap-1.5">
-            <button type="button" data-crop-ratio="4:5" class="crop-ratio-btn py-2 px-1 rounded-lg border border-blue-500 bg-blue-950/60 text-blue-300 font-bold text-center transition">
-              <div>4:5</div>
-              <div class="text-[9px] font-normal text-blue-400/80">Insta縦</div>
+          <div class="flex items-center justify-between">
+            <span class="text-gray-300 font-semibold">アスペクト比</span>
+            <div class="flex items-center bg-gray-950 border border-gray-800 p-0.5 rounded-lg text-[11px] font-semibold">
+              <button type="button" data-crop-orient="portrait" class="crop-orient-btn px-2.5 py-1 rounded-md bg-blue-600 text-white shadow transition flex items-center gap-1">
+                <i data-lucide="rectangle-vertical" class="w-3 h-3"></i>
+                <span>縦長</span>
+              </button>
+              <button type="button" data-crop-orient="landscape" class="crop-orient-btn px-2.5 py-1 rounded-md text-gray-400 hover:text-gray-200 transition flex items-center gap-1">
+                <i data-lucide="rectangle-horizontal" class="w-3 h-3"></i>
+                <span>横長</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-6 gap-1.5">
+            <button type="button" data-crop-base="1:1" class="crop-ratio-btn py-2 px-1 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center hover:border-gray-600 transition">
+              <div class="ratio-text">1:1</div>
+              <div class="text-[9px] font-normal text-gray-400">正方形</div>
             </button>
-            <button type="button" data-crop-ratio="21:9" class="crop-ratio-btn py-2 px-1 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center hover:border-gray-600 transition">
-              <div>21:9</div>
-              <div class="text-[9px] font-normal text-gray-400">シネマ</div>
+            <button type="button" data-crop-base="4:5" class="crop-ratio-btn py-2 px-1 rounded-lg border border-blue-500 bg-blue-950/60 text-blue-300 font-bold text-center transition">
+              <div class="ratio-text">4:5</div>
+              <div class="text-[9px] font-normal text-blue-400/80">Insta</div>
             </button>
-            <button type="button" data-crop-ratio="1:1" class="crop-ratio-btn py-2 px-1 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center hover:border-gray-600 transition">
-              <div>1:1</div>
-              <div class="text-[9px] font-normal text-gray-400">スクエア</div>
+            <button type="button" data-crop-base="3:4" class="crop-ratio-btn py-2 px-1 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center hover:border-gray-600 transition">
+              <div class="ratio-text">3:4</div>
+              <div class="text-[9px] font-normal text-gray-400">標準</div>
             </button>
-            <button type="button" data-crop-ratio="16:9" class="crop-ratio-btn py-2 px-1 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center hover:border-gray-600 transition">
-              <div>16:9</div>
+            <button type="button" data-crop-base="2:3" class="crop-ratio-btn py-2 px-1 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center hover:border-gray-600 transition">
+              <div class="ratio-text">2:3</div>
+              <div class="text-[9px] font-normal text-gray-400">一眼</div>
+            </button>
+            <button type="button" data-crop-base="9:16" class="crop-ratio-btn py-2 px-1 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center hover:border-gray-600 transition">
+              <div class="ratio-text">9:16</div>
               <div class="text-[9px] font-normal text-gray-400">ワイド</div>
             </button>
-            <button type="button" data-crop-ratio="9:16" class="crop-ratio-btn py-2 px-1 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center hover:border-gray-600 transition">
-              <div>9:16</div>
-              <div class="text-[9px] font-normal text-gray-400">ストーリー</div>
-            </button>
-            <button type="button" data-crop-ratio="3:2" class="crop-ratio-btn py-2 px-1 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center hover:border-gray-600 transition">
-              <div>3:2</div>
-              <div class="text-[9px] font-normal text-gray-400">一眼横</div>
-            </button>
-            <button type="button" data-crop-ratio="2:3" class="crop-ratio-btn py-2 px-1 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center hover:border-gray-600 transition">
-              <div>2:3</div>
-              <div class="text-[9px] font-normal text-gray-400">一眼縦</div>
-            </button>
-            <button type="button" data-crop-ratio="4:3" class="crop-ratio-btn py-2 px-1 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center hover:border-gray-600 transition">
-              <div>4:3</div>
-              <div class="text-[9px] font-normal text-gray-400">標準横</div>
-            </button>
-            <button type="button" data-crop-ratio="3:4" class="crop-ratio-btn py-2 px-1 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center hover:border-gray-600 transition">
-              <div>3:4</div>
-              <div class="text-[9px] font-normal text-gray-400">標準縦</div>
-            </button>
-            <button type="button" data-crop-ratio="5:4" class="crop-ratio-btn py-2 px-1 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center hover:border-gray-600 transition">
-              <div>5:4</div>
-              <div class="text-[9px] font-normal text-gray-400">横長</div>
+            <button type="button" data-crop-base="9:21" class="crop-ratio-btn py-2 px-1 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center hover:border-gray-600 transition">
+              <div class="ratio-text">9:21</div>
+              <div class="text-[9px] font-normal text-gray-400">シネマ</div>
             </button>
           </div>
         </div>
@@ -380,7 +378,7 @@
     </section>
 
     <!-- ==========================================
-         3. 追加：コラージュ専用サイドバー
+         3. コラージュ専用サイドバー
     =========================================== -->
     <section id="sidebar-collage" class="control-sidebar hidden bg-gray-900 shrink-0 z-20 flex flex-col">
       <div class="px-3.5 py-2.5 border-b border-gray-800 text-xs font-semibold bg-gray-950/50 flex items-center justify-between shrink-0">
@@ -395,17 +393,28 @@
       </div>
 
       <div class="p-3.5 overflow-y-auto space-y-3.5 text-xs flex-1">
-        <!-- ステップ1: 元のキャンバスの比率選択 -->
+        <!-- ステップ1: キャンバスの比率 + 縦横切替 -->
         <div class="space-y-1.5">
-          <span class="text-gray-300 font-semibold block">① キャンバスの比率</span>
-          <div class="grid grid-cols-7 gap-1">
-            <button type="button" data-collage-ratio="4:5" class="collage-ratio-btn py-1.5 rounded-lg border border-blue-500 bg-blue-950/60 text-blue-300 font-bold text-center text-[11px]">4:5</button>
-            <button type="button" data-collage-ratio="1:1" class="collage-ratio-btn py-1.5 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center text-[11px]">1:1</button>
-            <button type="button" data-collage-ratio="16:9" class="collage-ratio-btn py-1.5 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center text-[11px]">16:9</button>
-            <button type="button" data-collage-ratio="9:16" class="collage-ratio-btn py-1.5 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center text-[11px]">9:16</button>
-            <button type="button" data-collage-ratio="3:2" class="collage-ratio-btn py-1.5 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center text-[11px]">3:2</button>
-            <button type="button" data-collage-ratio="4:3" class="collage-ratio-btn py-1.5 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center text-[11px]">4:3</button>
-            <button type="button" data-collage-ratio="21:9" class="collage-ratio-btn py-1.5 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center text-[11px]">21:9</button>
+          <div class="flex items-center justify-between">
+            <span class="text-gray-300 font-semibold">① キャンバスの比率</span>
+            <div class="flex items-center bg-gray-950 border border-gray-800 p-0.5 rounded-lg text-[11px] font-semibold">
+              <button type="button" data-collage-orient="portrait" class="collage-orient-btn px-2 py-0.5 rounded bg-blue-600 text-white shadow transition flex items-center gap-1">
+                <i data-lucide="rectangle-vertical" class="w-3 h-3"></i>
+                <span>縦長</span>
+              </button>
+              <button type="button" data-collage-orient="landscape" class="collage-orient-btn px-2 py-0.5 rounded text-gray-400 hover:text-gray-200 transition flex items-center gap-1">
+                <i data-lucide="rectangle-horizontal" class="w-3 h-3"></i>
+                <span>横長</span>
+              </button>
+            </div>
+          </div>
+          <div class="grid grid-cols-6 gap-1.5">
+            <button type="button" data-collage-base="1:1" class="collage-ratio-btn py-1.5 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center text-[11px]"><span class="ratio-text">1:1</span></button>
+            <button type="button" data-collage-base="4:5" class="collage-ratio-btn py-1.5 rounded-lg border border-blue-500 bg-blue-950/60 text-blue-300 font-bold text-center text-[11px]"><span class="ratio-text">4:5</span></button>
+            <button type="button" data-collage-base="3:4" class="collage-ratio-btn py-1.5 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center text-[11px]"><span class="ratio-text">3:4</span></button>
+            <button type="button" data-collage-base="2:3" class="collage-ratio-btn py-1.5 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center text-[11px]"><span class="ratio-text">2:3</span></button>
+            <button type="button" data-collage-base="9:16" class="collage-ratio-btn py-1.5 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center text-[11px]"><span class="ratio-text">9:16</span></button>
+            <button type="button" data-collage-base="9:21" class="collage-ratio-btn py-1.5 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 font-bold text-center text-[11px]"><span class="ratio-text">9:21</span></button>
           </div>
         </div>
 
@@ -422,7 +431,7 @@
         <!-- ステップ3: 画像の組み方選択 -->
         <div class="space-y-1.5">
           <span class="text-gray-300 font-semibold block">③ 画像の組み方（レイアウト）</span>
-          <div id="collageLayoutGrid" class="grid grid-cols-4 gap-2"></div>
+          <div id="collageLayoutGrid" class="grid grid-cols-3 sm:grid-cols-6 gap-1.5"></div>
         </div>
 
         <!-- ステップ4: 外枠・内枠の太さ＆色調節 -->
@@ -470,7 +479,10 @@
             <span id="collageCellZoomLabel" class="font-mono text-blue-400 font-bold">1.00x</span>
           </div>
           <input id="collageCellZoomSlider" type="range" min="1" max="3" step="0.02" value="1" class="w-full h-1.5 bg-gray-700 rounded-lg cursor-pointer">
-          <p class="text-[10px] text-gray-400 pt-0.5">※プレビュー上の各枠をタップして選択・ドラッグで位置移動。下のサムネイルをタップすると選択中の枠に写真を割り当てます。</p>
+          <p class="text-[10px] text-gray-400 pt-0.5 leading-relaxed">
+            ・普通にドラッグ：枠内の写真位置を移動<br>
+            ・<span class="text-amber-300 font-semibold">枠を長押ししてドラッグ</span>：他の枠と写真を入れ替え（並び替え）
+          </p>
         </div>
       </div>
     </section>
@@ -566,12 +578,24 @@
       shadowStrength: 0
     };
 
-    // 追加モード用の独立state
     let activeAppMode = 'frame'; // 'frame' | 'crop' | 'collage'
 
+    // 比率文字列と縦横向きから実効比率文字列（例: "4:3"）を返すヘルパー
+    function resolveRatioStr(baseStr, orientation) {
+      const [a, b] = baseStr.split(':').map(Number);
+      if (a === b) return '1:1';
+      const minVal = Math.min(a, b);
+      const maxVal = Math.max(a, b);
+      return orientation === 'landscape' ? `${maxVal}:${minVal}` : `${minVal}:${maxVal}`;
+    }
+
     const cropState = {
-      ratioStr: '4:5',
-      edits: {} // photoId -> { panX: 0, panY: 0, zoom: 1 } (-1 ~ +1)
+      baseRatio: '4:5',
+      orientation: 'portrait', // 'portrait' | 'landscape'
+      get ratioStr() {
+        return resolveRatioStr(this.baseRatio, this.orientation);
+      },
+      edits: {}
     };
 
     const COLLAGE_LAYOUTS = {
@@ -585,18 +609,26 @@
         { id: '3-cols', name: '縦3列', cells: [{ x: 0, y: 0, w: 1/3, h: 1 }, { x: 1/3, y: 0, w: 1/3, h: 1 }, { x: 2/3, y: 0, w: 1/3, h: 1 }] },
         { id: '3-rows', name: '横3段', cells: [{ x: 0, y: 0, w: 1, h: 1/3 }, { x: 0, y: 1/3, w: 1, h: 1/3 }, { x: 0, y: 2/3, w: 1, h: 1/3 }] },
         { id: '3-l1r2', name: '左1・右2', cells: [{ x: 0, y: 0, w: 0.5, h: 1 }, { x: 0.5, y: 0, w: 0.5, h: 0.5 }, { x: 0.5, y: 0.5, w: 0.5, h: 0.5 }] },
-        { id: '3-t1b2', name: '上1・下2', cells: [{ x: 0, y: 0, w: 1, h: 0.5 }, { x: 0, y: 0.5, w: 0.5, h: 0.5 }, { x: 0.5, y: 0.5, w: 0.5, h: 0.5 }] }
+        { id: '3-r1l2', name: '右1・左2', cells: [{ x: 0, y: 0, w: 0.5, h: 0.5 }, { x: 0, y: 0.5, w: 0.5, h: 0.5 }, { x: 0.5, y: 0, w: 0.5, h: 1 }] },
+        { id: '3-t1b2', name: '上1・下2', cells: [{ x: 0, y: 0, w: 1, h: 0.5 }, { x: 0, y: 0.5, w: 0.5, h: 0.5 }, { x: 0.5, y: 0.5, w: 0.5, h: 0.5 }] },
+        { id: '3-b1t2', name: '下1・上2', cells: [{ x: 0, y: 0, w: 0.5, h: 0.5 }, { x: 0.5, y: 0, w: 0.5, h: 0.5 }, { x: 0, y: 0.5, w: 1, h: 0.5 }] }
       ],
       4: [
-        { id: '4-grid', name: '2×2グリッド', cells: [{ x: 0, y: 0, w: 0.5, h: 0.5 }, { x: 0.5, y: 0, w: 0.5, h: 0.5 }, { x: 0, y: 0.5, w: 0.5, h: 0.5 }, { x: 0.5, y: 0.5, w: 0.5, h: 0.5 }] },
+        { id: '4-grid', name: '2×2', cells: [{ x: 0, y: 0, w: 0.5, h: 0.5 }, { x: 0.5, y: 0, w: 0.5, h: 0.5 }, { x: 0, y: 0.5, w: 0.5, h: 0.5 }, { x: 0.5, y: 0.5, w: 0.5, h: 0.5 }] },
         { id: '4-cols', name: '縦4列', cells: [{ x: 0, y: 0, w: 0.25, h: 1 }, { x: 0.25, y: 0, w: 0.25, h: 1 }, { x: 0.5, y: 0, w: 0.25, h: 1 }, { x: 0.75, y: 0, w: 0.25, h: 1 }] },
+        { id: '4-rows', name: '横4段', cells: [{ x: 0, y: 0, w: 1, h: 0.25 }, { x: 0, y: 0.25, w: 1, h: 0.25 }, { x: 0, y: 0.5, w: 1, h: 0.25 }, { x: 0, y: 0.75, w: 1, h: 0.25 }] },
         { id: '4-l1r3', name: '左1・右3', cells: [{ x: 0, y: 0, w: 0.5, h: 1 }, { x: 0.5, y: 0, w: 0.5, h: 1/3 }, { x: 0.5, y: 1/3, w: 0.5, h: 1/3 }, { x: 0.5, y: 2/3, w: 0.5, h: 1/3 }] },
+        { id: '4-r1l3', name: '右1・左3', cells: [{ x: 0, y: 0, w: 0.5, h: 1/3 }, { x: 0, y: 1/3, w: 0.5, h: 1/3 }, { x: 0, y: 2/3, w: 0.5, h: 1/3 }, { x: 0.5, y: 0, w: 0.5, h: 1 }] },
         { id: '4-t1b3', name: '上1・下3', cells: [{ x: 0, y: 0, w: 1, h: 0.5 }, { x: 0, y: 0.5, w: 1/3, h: 0.5 }, { x: 1/3, y: 0.5, w: 1/3, h: 0.5 }, { x: 2/3, y: 0.5, w: 1/3, h: 0.5 }] }
       ]
     };
 
     const collageState = {
-      ratioStr: '4:5',
+      baseRatio: '4:5',
+      orientation: 'portrait',
+      get ratioStr() {
+        return resolveRatioStr(this.baseRatio, this.orientation);
+      },
       divisions: 2,
       layoutId: '2-h',
       outerBorderPercent: 3.0,
@@ -609,7 +641,14 @@
         { photoIndex: 2, panX: 0, panY: 0, zoom: 1 },
         { photoIndex: 3, panX: 0, panY: 0, zoom: 1 }
       ],
-      lastRenderedBoxes: []
+      lastRenderedBoxes: [],
+      swapDrag: {
+        active: false,
+        fromIdx: -1,
+        overIdx: -1,
+        pointerX: 0,
+        pointerY: 0
+      }
     };
 
     const fileInput = document.getElementById('fileInput');
@@ -630,6 +669,38 @@
     const topRightOverlayBtns = document.getElementById('topRightOverlayBtns');
     const clearAllBtn = document.getElementById('clearAllBtn');
     const extractedPaletteContainer = document.getElementById('extractedPaletteContainer');
+
+    // 軽量化用：プレビュー専用の縮小ビットマップキャンバス（長辺1200px）を生成
+    function createFastPreviewProxy(img) {
+      const maxDim = 1200;
+      const w = img.naturalWidth;
+      const h = img.naturalHeight;
+      if (Math.max(w, h) <= maxDim) return img;
+      const scale = maxDim / Math.max(w, h);
+      const c = document.createElement('canvas');
+      c.width = Math.round(w * scale);
+      c.height = Math.round(h * scale);
+      const ctx = c.getContext('2d');
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(img, 0, 0, c.width, c.height);
+      return c;
+    }
+
+    // requestAnimationFrame による軽量描画スケジューラ
+    let rafPending = false;
+    let pendingOverlayState = false;
+    function schedulePreviewRender(showOverlay = false) {
+      pendingOverlayState = pendingOverlayState || showOverlay;
+      if (rafPending) return;
+      rafPending = true;
+      requestAnimationFrame(() => {
+        rafPending = false;
+        const ov = pendingOverlayState;
+        pendingOverlayState = false;
+        renderPreview(ov);
+      });
+    }
 
     function updateExportButtonLabel() {
       if (!state.photos.length) {
@@ -663,12 +734,14 @@
         try {
           const img = await loadImage(file);
           const palette = extractFiveColors(img);
+          const previewProxy = createFastPreviewProxy(img);
           const id = String(Date.now() + Math.random());
           state.photos.push({
             id,
             file,
             name: file.name.replace(/\.[^/.]+$/, ''),
             img,
+            previewProxy,
             width: img.naturalWidth,
             height: img.naturalHeight,
             palette
@@ -692,6 +765,7 @@
         thumbnailBar.classList.remove('hidden');
         imageInfoBadge.classList.remove('hidden');
         topRightOverlayBtns.classList.remove('hidden');
+        if (activeAppMode !== 'frame') dragHintBadge.classList.remove('hidden');
         exportBtn.disabled = false;
         updateExportButtonLabel();
         
@@ -893,7 +967,7 @@
     }
 
     // ==========================================
-    // 2. 追加：クロップ描画関数
+    // 2. クロップ描画関数（軽量プロキシ対応）
     // ==========================================
     function parseRatioString(ratioStr) {
       const parts = ratioStr.split(':').map(Number);
@@ -908,32 +982,45 @@
     }
 
     function renderCroppedPhoto(targetCanvas, photoObj, maxPreviewDimension = null, showGridOverlay = false) {
-      const img = photoObj.img;
+      const isPreview = Boolean(maxPreviewDimension);
+      const sourceImg = (isPreview && photoObj.previewProxy) ? photoObj.previewProxy : photoObj.img;
+      const srcFullW = sourceImg.width || photoObj.width;
+      const srcFullH = sourceImg.height || photoObj.height;
+
       const origW = photoObj.width;
       const origH = photoObj.height;
       const targetAspect = parseRatioString(cropState.ratioStr);
       const edit = getCropEdit(photoObj);
 
-      // 元画像から切り抜く基準サイズを計算
-      let baseCropW, baseCropH;
+      // フル解像度基準の出力ピクセル数
+      let fullCropW, fullCropH;
       if (origW / origH > targetAspect) {
-        baseCropH = origH;
-        baseCropW = origH * targetAspect;
+        fullCropH = origH;
+        fullCropW = origH * targetAspect;
       } else {
-        baseCropW = origW;
-        baseCropH = origW / targetAspect;
+        fullCropW = origW;
+        fullCropH = origW / targetAspect;
+      }
+      const outW = Math.round(fullCropW);
+      const outH = Math.round(fullCropH);
+
+      // 描画元（プロキシまたは元画像）での切り抜き範囲計算
+      let baseCropW, baseCropH;
+      if (srcFullW / srcFullH > targetAspect) {
+        baseCropH = srcFullH;
+        baseCropW = srcFullH * targetAspect;
+      } else {
+        baseCropW = srcFullW;
+        baseCropH = srcFullW / targetAspect;
       }
 
       const srcW = baseCropW / edit.zoom;
       const srcH = baseCropH / edit.zoom;
-      const maxOffsetX = (origW - srcW) / 2;
-      const maxOffsetY = (origH - srcH) / 2;
+      const maxOffsetX = (srcFullW - srcW) / 2;
+      const maxOffsetY = (srcFullH - srcH) / 2;
 
-      const srcX = (origW - srcW) / 2 - (edit.panX * maxOffsetX);
-      const srcY = (origH - srcH) / 2 - (edit.panY * maxOffsetY);
-
-      const outW = Math.round(baseCropW);
-      const outH = Math.round(baseCropH);
+      const srcX = (srcFullW - srcW) / 2 - (edit.panX * maxOffsetX);
+      const srcY = (srcFullH - srcH) / 2 - (edit.panY * maxOffsetY);
 
       let scale = 1;
       if (maxPreviewDimension) {
@@ -945,15 +1032,15 @@
 
       const canvasW = Math.round(outW * scale);
       const canvasH = Math.round(outH * scale);
-      targetCanvas.width = canvasW;
-      targetCanvas.height = canvasH;
+      if (targetCanvas.width !== canvasW) targetCanvas.width = canvasW;
+      if (targetCanvas.height !== canvasH) targetCanvas.height = canvasH;
 
       const ctx = targetCanvas.getContext('2d');
       ctx.save();
-      ctx.drawImage(img, srcX, srcY, srcW, srcH, 0, 0, canvasW, canvasH);
+      ctx.drawImage(sourceImg, srcX, srcY, srcW, srcH, 0, 0, canvasW, canvasH);
 
       if (showGridOverlay) {
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(canvasW / 3, 0); ctx.lineTo(canvasW / 3, canvasH);
@@ -968,16 +1055,49 @@
     }
 
     // ==========================================
-    // 3. 追加：コラージュ描画関数
+    // 3. コラージュ描画関数（軽量プロキシ & 長押し並び替え対応）
     // ==========================================
     function getActiveCollageLayout() {
       const list = COLLAGE_LAYOUTS[collageState.divisions] || COLLAGE_LAYOUTS[2];
       return list.find(l => l.id === collageState.layoutId) || list[0];
     }
 
+    function drawPhotoInCell(ctx, photoObj, slot, boxX, boxY, boxW, boxH, isPreview) {
+      if (!photoObj) return;
+      const sourceImg = (isPreview && photoObj.previewProxy) ? photoObj.previewProxy : photoObj.img;
+      const origW = sourceImg.width || photoObj.width;
+      const origH = sourceImg.height || photoObj.height;
+      const boxAspect = boxW / boxH;
+
+      let baseCropW, baseCropH;
+      if (origW / origH > boxAspect) {
+        baseCropH = origH;
+        baseCropW = origH * boxAspect;
+      } else {
+        baseCropW = origW;
+        baseCropH = origW / boxAspect;
+      }
+
+      const srcW = baseCropW / slot.zoom;
+      const srcH = baseCropH / slot.zoom;
+      const maxOffsetX = (origW - srcW) / 2;
+      const maxOffsetY = (origH - srcH) / 2;
+
+      const srcX = (origW - srcW) / 2 - (slot.panX * maxOffsetX);
+      const srcY = (origH - srcH) / 2 - (slot.panY * maxOffsetY);
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(boxX, boxY, boxW, boxH);
+      ctx.clip();
+      ctx.drawImage(sourceImg, srcX, srcY, srcW, srcH, boxX, boxY, boxW, boxH);
+      ctx.restore();
+    }
+
     function renderCollageCanvas(targetCanvas, isPreview = true) {
       const aspect = parseRatioString(collageState.ratioStr);
-      const baseLongSide = isPreview ? 1400 : 3200;
+      // プレビュー時は長辺960pxに抑えて超高速描画、書き出し時は3200pxの高解像度
+      const baseLongSide = isPreview ? 960 : 3200;
 
       let totalW, totalH;
       if (aspect >= 1) {
@@ -988,12 +1108,11 @@
         totalW = Math.round(baseLongSide * aspect);
       }
 
-      targetCanvas.width = totalW;
-      targetCanvas.height = totalH;
+      if (targetCanvas.width !== totalW) targetCanvas.width = totalW;
+      if (targetCanvas.height !== totalH) targetCanvas.height = totalH;
       const ctx = targetCanvas.getContext('2d');
       ctx.save();
 
-      // 背景（外枠・内枠の色）塗りつぶし
       ctx.fillStyle = collageState.borderColor;
       ctx.fillRect(0, 0, totalW, totalH);
 
@@ -1007,6 +1126,7 @@
       const layout = getActiveCollageLayout();
       const eps = 0.01;
       const renderedBoxes = [];
+      const swap = collageState.swapDrag;
 
       layout.cells.forEach((cell, idx) => {
         const slot = collageState.slots[idx] || { photoIndex: 0, panX: 0, panY: 0, zoom: 1 };
@@ -1022,59 +1142,75 @@
         const boxW = Math.max(2, Math.round(cell.w * usableW - leftInset - rightInset));
         const boxH = Math.max(2, Math.round(cell.h * usableH - topInset - bottomInset));
 
-        renderedBoxes.push({ idx, x: boxX, y: boxY, w: boxW, h: boxH });
+        renderedBoxes.push({ idx, x: boxX, y: boxY, w: boxW, h: boxH, slot, photoObj });
 
-        if (photoObj) {
-          const img = photoObj.img;
-          const origW = photoObj.width;
-          const origH = photoObj.height;
-          const boxAspect = boxW / boxH;
-
-          let baseCropW, baseCropH;
-          if (origW / origH > boxAspect) {
-            baseCropH = origH;
-            baseCropW = origH * boxAspect;
-          } else {
-            baseCropW = origW;
-            baseCropH = origW / boxAspect;
-          }
-
-          const srcW = baseCropW / slot.zoom;
-          const srcH = baseCropH / slot.zoom;
-          const maxOffsetX = (origW - srcW) / 2;
-          const maxOffsetY = (origH - srcH) / 2;
-
-          const srcX = (origW - srcW) / 2 - (slot.panX * maxOffsetX);
-          const srcY = (origH - srcH) / 2 - (slot.panY * maxOffsetY);
-
-          ctx.save();
-          ctx.beginPath();
-          ctx.rect(boxX, boxY, boxW, boxH);
-          ctx.clip();
-          ctx.drawImage(img, srcX, srcY, srcW, srcH, boxX, boxY, boxW, boxH);
-          ctx.restore();
+        ctx.save();
+        if (isPreview && swap.active && swap.fromIdx === idx) {
+          ctx.globalAlpha = 0.35;
         }
+        drawPhotoInCell(ctx, photoObj, slot, boxX, boxY, boxW, boxH, isPreview);
+        ctx.restore();
 
-        // プレビュー時は選択中のセルに青い枠を表示
-        if (isPreview && idx === collageState.activeCellIdx) {
-          ctx.save();
-          const strokeW = Math.max(3, Math.round(minSide * 0.006));
-          ctx.strokeStyle = '#3b82f6';
-          ctx.lineWidth = strokeW;
-          ctx.strokeRect(boxX + strokeW / 2, boxY + strokeW / 2, boxW - strokeW, boxH - strokeW);
+        // プレビュー時の枠線・番号表示
+        if (isPreview) {
+          const isSwapTarget = swap.active && swap.overIdx === idx && swap.overIdx !== swap.fromIdx;
+          const isSelected = idx === collageState.activeCellIdx;
 
-          // 枠番号バッジ
-          const badgeSize = Math.max(22, Math.round(minSide * 0.032));
-          ctx.fillStyle = '#2563eb';
-          ctx.fillRect(boxX, boxY, badgeSize, badgeSize);
-          ctx.fillStyle = '#ffffff';
-          ctx.font = `bold ${Math.round(badgeSize * 0.6)}px sans-serif`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(String(idx + 1), boxX + badgeSize / 2, boxY + badgeSize / 2);
-          ctx.restore();
+          if (isSwapTarget) {
+            ctx.save();
+            const strokeW = Math.max(4, Math.round(minSide * 0.008));
+            ctx.strokeStyle = '#f59e0b'; // 入れ替え先ターゲットはアンバー色
+            ctx.lineWidth = strokeW;
+            ctx.setLineDash([10, 6]);
+            ctx.strokeRect(boxX + strokeW / 2, boxY + strokeW / 2, boxW - strokeW, boxH - strokeW);
+            ctx.fillStyle = 'rgba(245, 158, 11, 0.22)';
+            ctx.fillRect(boxX, boxY, boxW, boxH);
+            ctx.restore();
+          } else if (isSelected) {
+            ctx.save();
+            const strokeW = Math.max(3, Math.round(minSide * 0.006));
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = strokeW;
+            ctx.strokeRect(boxX + strokeW / 2, boxY + strokeW / 2, boxW - strokeW, boxH - strokeW);
+
+            const badgeSize = Math.max(20, Math.round(minSide * 0.035));
+            ctx.fillStyle = '#2563eb';
+            ctx.fillRect(boxX, boxY, badgeSize, badgeSize);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = `bold ${Math.round(badgeSize * 0.6)}px sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(String(idx + 1), boxX + badgeSize / 2, boxY + badgeSize / 2);
+            ctx.restore();
+          }
         }
       });
+
+      // 長押し並び替え中：指の位置にドラッグ中の枠のミニチュアを浮遊描画
+      if (isPreview && swap.active && renderedBoxes[swap.fromIdx]) {
+        const srcBox = renderedBoxes[swap.fromIdx];
+        const floatScale = 0.82;
+        const fw = Math.round(srcBox.w * floatScale);
+        const fh = Math.round(srcBox.h * floatScale);
+        const fx = Math.round(swap.pointerX - fw / 2);
+        const fy = Math.round(swap.pointerY - fh / 2);
+
+        ctx.save();
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.65)';
+        ctx.shadowBlur = 24;
+        ctx.shadowOffsetY = 8;
+        ctx.fillStyle = '#000';
+        ctx.fillRect(fx, fy, fw, fh);
+        ctx.restore();
+
+        ctx.save();
+        ctx.globalAlpha = 0.92;
+        drawPhotoInCell(ctx, srcBox.photoObj, srcBox.slot, fx, fy, fw, fh, true);
+        ctx.strokeStyle = '#60a5fa';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(fx, fy, fw, fh);
+        ctx.restore();
+      }
 
       if (isPreview) {
         collageState.lastRenderedBoxes = renderedBoxes;
@@ -1096,7 +1232,7 @@
       
       const containerW = previewContainer.clientWidth - 32;
       const containerH = previewContainer.clientHeight - 32;
-      const maxDim = Math.max(containerW, containerH, 1000);
+      const maxDim = Math.max(containerW, containerH, 900);
 
       if (activeAppMode === 'frame') {
         const info = renderPhotoWithFrame(previewCanvas, current, maxDim);
@@ -1114,7 +1250,7 @@
     }
 
     window.addEventListener('resize', () => {
-      if (state.photos.length > 0) renderPreview();
+      if (state.photos.length > 0) schedulePreviewRender();
     });
 
     function renderThumbnails() {
@@ -1161,7 +1297,6 @@
 
         wrapper.onclick = () => {
           if (activeAppMode === 'collage') {
-            // コラージュ時は選択中の枠にその写真を割り当てる
             const slot = collageState.slots[collageState.activeCellIdx];
             if (slot) {
               slot.photoIndex = idx;
@@ -1241,6 +1376,14 @@
     // ==========================================
     // モード切替トグルのイベント処理
     // ==========================================
+    function updateDefaultDragHint() {
+      if (activeAppMode === 'crop') {
+        dragHintText.textContent = 'ドラッグで切り抜き位置を調整';
+      } else if (activeAppMode === 'collage') {
+        dragHintText.textContent = 'ドラッグで位置調整 / 長押しで枠を入れ替え';
+      }
+    }
+
     document.querySelectorAll('.app-mode-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         activeAppMode = btn.dataset.appMode;
@@ -1260,9 +1403,7 @@
         previewCanvas.classList.toggle('interactive-canvas', activeAppMode !== 'frame');
         if (state.photos.length > 0) {
           dragHintBadge.classList.toggle('hidden', activeAppMode === 'frame');
-          dragHintText.textContent = activeAppMode === 'crop'
-            ? '画像をドラッグして切り抜き位置を調整'
-            : '枠をタップして選択・ドラッグして位置調整';
+          updateDefaultDragHint();
         }
 
         updateExportButtonLabel();
@@ -1313,7 +1454,7 @@
       state.solidColor = e.target.value;
       updateColorSelectionUI();
       renderExtractedPalette();
-      renderPreview();
+      schedulePreviewRender();
     });
 
     document.getElementById('autoPerPhotoToggle').addEventListener('change', (e) => {
@@ -1324,33 +1465,33 @@
     document.getElementById('borderWidthSlider').addEventListener('input', (e) => {
       state.borderPercent = parseFloat(e.target.value);
       document.getElementById('borderWidthLabel').textContent = `${state.borderPercent}%`;
-      renderPreview();
+      schedulePreviewRender();
     });
 
     document.getElementById('blurAmountSlider').addEventListener('input', (e) => {
       state.mode = 'blur';
       state.blurAmount = parseInt(e.target.value, 10);
       document.getElementById('blurAmountLabel').textContent = `${state.blurAmount}px`;
-      renderPreview();
+      schedulePreviewRender();
     });
 
     document.getElementById('blurBrightSlider').addEventListener('input', (e) => {
       state.mode = 'blur';
       state.blurBrightness = parseInt(e.target.value, 10);
       document.getElementById('blurBrightLabel').textContent = `${state.blurBrightness}%`;
-      renderPreview();
+      schedulePreviewRender();
     });
 
     document.getElementById('radiusSlider').addEventListener('input', (e) => {
       state.cornerRadius = parseFloat(e.target.value);
       document.getElementById('radiusLabel').textContent = `${state.cornerRadius}%`;
-      renderPreview();
+      schedulePreviewRender();
     });
 
     document.getElementById('shadowSlider').addEventListener('input', (e) => {
       state.shadowStrength = parseInt(e.target.value, 10);
       document.getElementById('shadowLabel').textContent = `${state.shadowStrength}%`;
-      renderPreview();
+      schedulePreviewRender();
     });
 
     document.querySelectorAll('.sizing-btn').forEach(btn => {
@@ -1370,7 +1511,7 @@
     });
 
     // ==========================================
-    // クロップモードのUI・イベント
+    // クロップモードのUI・イベント（比率縦横切替対応）
     // ==========================================
     const cropZoomSlider = document.getElementById('cropZoomSlider');
     const cropZoomLabel = document.getElementById('cropZoomLabel');
@@ -1378,6 +1519,31 @@
     const cropPanXLabel = document.getElementById('cropPanXLabel');
     const cropPanYSlider = document.getElementById('cropPanYSlider');
     const cropPanYLabel = document.getElementById('cropPanYLabel');
+
+    function updateCropRatioLabelsUI() {
+      document.querySelectorAll('.crop-ratio-btn').forEach(btn => {
+        const base = btn.dataset.cropBase;
+        const labelEl = btn.querySelector('.ratio-text');
+        if (labelEl) {
+          labelEl.textContent = resolveRatioStr(base, cropState.orientation);
+        }
+        const active = base === cropState.baseRatio;
+        btn.classList.toggle('border-blue-500', active);
+        btn.classList.toggle('bg-blue-950/60', active);
+        btn.classList.toggle('text-blue-300', active);
+        btn.classList.toggle('border-gray-700', !active);
+        btn.classList.toggle('bg-gray-800/50', !active);
+        btn.classList.toggle('text-gray-300', !active);
+      });
+
+      document.querySelectorAll('.crop-orient-btn').forEach(btn => {
+        const isActive = btn.dataset.cropOrient === cropState.orientation;
+        btn.classList.toggle('bg-blue-600', isActive);
+        btn.classList.toggle('text-white', isActive);
+        btn.classList.toggle('shadow', isActive);
+        btn.classList.toggle('text-gray-400', !isActive);
+      });
+    }
 
     function syncCropSlidersFromCurrent() {
       if (!state.photos.length) return;
@@ -1390,19 +1556,19 @@
       cropPanYLabel.textContent = `${Math.round(edit.panY * 100)}%`;
     }
 
+    document.querySelectorAll('.crop-orient-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        cropState.orientation = btn.dataset.cropOrient;
+        updateCropRatioLabelsUI();
+        schedulePreviewRender(true);
+      });
+    });
+
     document.querySelectorAll('.crop-ratio-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        cropState.ratioStr = btn.dataset.cropRatio;
-        document.querySelectorAll('.crop-ratio-btn').forEach(b => {
-          const active = b.dataset.cropRatio === cropState.ratioStr;
-          b.classList.toggle('border-blue-500', active);
-          b.classList.toggle('bg-blue-950/60', active);
-          b.classList.toggle('text-blue-300', active);
-          b.classList.toggle('border-gray-700', !active);
-          b.classList.toggle('bg-gray-800/50', !active);
-          b.classList.toggle('text-gray-300', !active);
-        });
-        renderPreview(true);
+        cropState.baseRatio = btn.dataset.cropBase;
+        updateCropRatioLabelsUI();
+        schedulePreviewRender(true);
       });
     });
 
@@ -1411,7 +1577,7 @@
       const edit = getCropEdit(state.photos[state.currentIndex]);
       edit.zoom = parseFloat(e.target.value);
       cropZoomLabel.textContent = `${edit.zoom.toFixed(2)}x`;
-      renderPreview(true);
+      schedulePreviewRender(true);
     });
 
     cropPanXSlider.addEventListener('input', (e) => {
@@ -1419,7 +1585,7 @@
       const edit = getCropEdit(state.photos[state.currentIndex]);
       edit.panX = parseInt(e.target.value, 10) / 100;
       cropPanXLabel.textContent = `${e.target.value}%`;
-      renderPreview(true);
+      schedulePreviewRender(true);
     });
 
     cropPanYSlider.addEventListener('input', (e) => {
@@ -1427,7 +1593,7 @@
       const edit = getCropEdit(state.photos[state.currentIndex]);
       edit.panY = parseInt(e.target.value, 10) / 100;
       cropPanYLabel.textContent = `${e.target.value}%`;
-      renderPreview(true);
+      schedulePreviewRender(true);
     });
 
     document.getElementById('cropResetPosBtn').addEventListener('click', () => {
@@ -1441,12 +1607,37 @@
     });
 
     // ==========================================
-    // コラージュモードのUI・イベント
+    // コラージュモードのUI・イベント（比率縦横切替・横4段対応）
     // ==========================================
     const collageLayoutGrid = document.getElementById('collageLayoutGrid');
     const collageCellZoomSlider = document.getElementById('collageCellZoomSlider');
     const collageCellZoomLabel = document.getElementById('collageCellZoomLabel');
     const activeCellNumberLabel = document.getElementById('activeCellNumberLabel');
+
+    function updateCollageRatioLabelsUI() {
+      document.querySelectorAll('.collage-ratio-btn').forEach(btn => {
+        const base = btn.dataset.collageBase;
+        const labelEl = btn.querySelector('.ratio-text');
+        if (labelEl) {
+          labelEl.textContent = resolveRatioStr(base, collageState.orientation);
+        }
+        const active = base === collageState.baseRatio;
+        btn.classList.toggle('border-blue-500', active);
+        btn.classList.toggle('bg-blue-950/60', active);
+        btn.classList.toggle('text-blue-300', active);
+        btn.classList.toggle('border-gray-700', !active);
+        btn.classList.toggle('bg-gray-800/50', !active);
+        btn.classList.toggle('text-gray-300', !active);
+      });
+
+      document.querySelectorAll('.collage-orient-btn').forEach(btn => {
+        const isActive = btn.dataset.collageOrient === collageState.orientation;
+        btn.classList.toggle('bg-blue-600', isActive);
+        btn.classList.toggle('text-white', isActive);
+        btn.classList.toggle('shadow', isActive);
+        btn.classList.toggle('text-gray-400', !isActive);
+      });
+    }
 
     function renderCollageLayoutButtons() {
       collageLayoutGrid.innerHTML = '';
@@ -1460,9 +1651,8 @@
           isSelected ? 'border-blue-500 bg-blue-950/60 text-blue-300' : 'border-gray-700 bg-gray-800/50 text-gray-400 hover:border-gray-600'
         }`;
 
-        // ミニチュア枠アイコンを描画
         const iconBox = document.createElement('div');
-        iconBox.className = 'w-10 h-10 relative bg-gray-950 rounded border border-gray-700 overflow-hidden';
+        iconBox.className = 'w-9 h-9 relative bg-gray-950 rounded border border-gray-700 overflow-hidden';
         layout.cells.forEach(c => {
           const cellDiv = document.createElement('div');
           cellDiv.className = `absolute border border-gray-900 ${isSelected ? 'bg-blue-400/70' : 'bg-gray-500/60'}`;
@@ -1483,7 +1673,7 @@
         btn.onclick = () => {
           collageState.layoutId = layout.id;
           renderCollageLayoutButtons();
-          renderPreview();
+          schedulePreviewRender();
         };
 
         collageLayoutGrid.appendChild(btn);
@@ -1498,19 +1688,19 @@
       collageCellZoomLabel.textContent = `${slot.zoom.toFixed(2)}x`;
     }
 
+    document.querySelectorAll('.collage-orient-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        collageState.orientation = btn.dataset.collageOrient;
+        updateCollageRatioLabelsUI();
+        schedulePreviewRender();
+      });
+    });
+
     document.querySelectorAll('.collage-ratio-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        collageState.ratioStr = btn.dataset.collageRatio;
-        document.querySelectorAll('.collage-ratio-btn').forEach(b => {
-          const active = b.dataset.collageRatio === collageState.ratioStr;
-          b.classList.toggle('border-blue-500', active);
-          b.classList.toggle('bg-blue-950/60', active);
-          b.classList.toggle('text-blue-300', active);
-          b.classList.toggle('border-gray-700', !active);
-          b.classList.toggle('bg-gray-800/50', !active);
-          b.classList.toggle('text-gray-300', !active);
-        });
-        renderPreview();
+        collageState.baseRatio = btn.dataset.collageBase;
+        updateCollageRatioLabelsUI();
+        schedulePreviewRender();
       });
     });
 
@@ -1534,20 +1724,20 @@
         renderCollageLayoutButtons();
         syncCollageZoomSlider();
         renderThumbnails();
-        renderPreview();
+        schedulePreviewRender();
       });
     });
 
     document.getElementById('collageOuterBorderSlider').addEventListener('input', (e) => {
       collageState.outerBorderPercent = parseFloat(e.target.value);
       document.getElementById('collageOuterBorderLabel').textContent = `${collageState.outerBorderPercent.toFixed(1)}%`;
-      renderPreview();
+      schedulePreviewRender();
     });
 
     document.getElementById('collageInnerGapSlider').addEventListener('input', (e) => {
       collageState.innerGapPercent = parseFloat(e.target.value);
       document.getElementById('collageInnerGapLabel').textContent = `${collageState.innerGapPercent.toFixed(1)}%`;
-      renderPreview();
+      schedulePreviewRender();
     });
 
     document.querySelectorAll('.collage-color-btn').forEach(btn => {
@@ -1559,13 +1749,13 @@
           b.classList.toggle('ring-2', active);
           b.classList.toggle('ring-blue-500/40', active);
         });
-        renderPreview();
+        schedulePreviewRender();
       });
     });
 
     document.getElementById('collageCustomColorPicker').addEventListener('input', (e) => {
       collageState.borderColor = e.target.value;
-      renderPreview();
+      schedulePreviewRender();
     });
 
     collageCellZoomSlider.addEventListener('input', (e) => {
@@ -1573,7 +1763,7 @@
       if (!slot) return;
       slot.zoom = parseFloat(e.target.value);
       collageCellZoomLabel.textContent = `${slot.zoom.toFixed(2)}x`;
-      renderPreview();
+      schedulePreviewRender();
     });
 
     document.getElementById('collageResetPosBtn').addEventListener('click', () => {
@@ -1589,26 +1779,41 @@
     renderCollageLayoutButtons();
 
     // ==========================================
-    // Canvasドラッグによる直感的な位置調整 (クロップ & コラージュ)
+    // Canvasドラッグ位置調整 & 長押しによる枠の入れ替え
     // ==========================================
     let isDraggingCanvas = false;
     let dragStartX = 0;
     let dragStartY = 0;
     let startPanX = 0;
     let startPanY = 0;
+    let longPressTimer = null;
+
+    function clearLongPressTimer() {
+      if (longPressTimer) {
+        clearTimeout(longPressTimer);
+        longPressTimer = null;
+      }
+    }
+
+    function clientToCanvasCoords(clientX, clientY) {
+      const rect = previewCanvas.getBoundingClientRect();
+      const scaleX = previewCanvas.width / Math.max(1, rect.width);
+      const scaleY = previewCanvas.height / Math.max(1, rect.height);
+      return {
+        x: (clientX - rect.left) * scaleX,
+        y: (clientY - rect.top) * scaleY,
+        rect
+      };
+    }
 
     previewCanvas.addEventListener('pointerdown', (e) => {
       if (activeAppMode === 'frame' || !state.photos.length) return;
-      const rect = previewCanvas.getBoundingClientRect();
-      if (!rect.width || !rect.height) return;
+      const { x: canvasX, y: canvasY } = clientToCanvasCoords(e.clientX, e.clientY);
 
-      const scaleX = previewCanvas.width / rect.width;
-      const scaleY = previewCanvas.height / rect.height;
-      const canvasX = (e.clientX - rect.left) * scaleX;
-      const canvasY = (e.clientY - rect.top) * scaleY;
+      clearLongPressTimer();
+      collageState.swapDrag.active = false;
 
       if (activeAppMode === 'collage') {
-        // タップした枠をアクティブにする
         const hit = collageState.lastRenderedBoxes.find(
           b => canvasX >= b.x && canvasX <= b.x + b.w && canvasY >= b.y && canvasY <= b.y + b.h
         );
@@ -1616,7 +1821,19 @@
           collageState.activeCellIdx = hit.idx;
           syncCollageZoomSlider();
           renderThumbnails();
-          renderPreview();
+          schedulePreviewRender();
+
+          // 0.35秒長押しで枠の並び替えモードを起動
+          longPressTimer = setTimeout(() => {
+            collageState.swapDrag.active = true;
+            collageState.swapDrag.fromIdx = hit.idx;
+            collageState.swapDrag.overIdx = hit.idx;
+            collageState.swapDrag.pointerX = canvasX;
+            collageState.swapDrag.pointerY = canvasY;
+            if (navigator.vibrate) navigator.vibrate(35);
+            dragHintText.textContent = '入れ替え先の枠まで動かして指を離す';
+            schedulePreviewRender(true);
+          }, 350);
         }
         const slot = collageState.slots[collageState.activeCellIdx];
         startPanX = slot ? slot.panX : 0;
@@ -1631,12 +1848,32 @@
       dragStartX = e.clientX;
       dragStartY = e.clientY;
       previewCanvas.setPointerCapture(e.pointerId);
-      renderPreview(true);
+      schedulePreviewRender(true);
     });
 
     previewCanvas.addEventListener('pointermove', (e) => {
       if (!isDraggingCanvas || activeAppMode === 'frame' || !state.photos.length) return;
-      const rect = previewCanvas.getBoundingClientRect();
+
+      const moveDist = Math.hypot(e.clientX - dragStartX, e.clientY - dragStartY);
+      // 長押し確定前に大きく動かした場合は通常の位置移動（パン）として扱う
+      if (!collageState.swapDrag.active && moveDist > 10) {
+        clearLongPressTimer();
+      }
+
+      const { x: canvasX, y: canvasY, rect } = clientToCanvasCoords(e.clientX, e.clientY);
+
+      // 長押し並び替えモード中の処理
+      if (activeAppMode === 'collage' && collageState.swapDrag.active) {
+        collageState.swapDrag.pointerX = canvasX;
+        collageState.swapDrag.pointerY = canvasY;
+        const overBox = collageState.lastRenderedBoxes.find(
+          b => canvasX >= b.x && canvasX <= b.x + b.w && canvasY >= b.y && canvasY <= b.y + b.h
+        );
+        collageState.swapDrag.overIdx = overBox ? overBox.idx : -1;
+        schedulePreviewRender(true);
+        return;
+      }
+
       const sensitivity = 2.2;
       const dxNorm = ((e.clientX - dragStartX) / Math.max(120, rect.width)) * sensitivity;
       const dyNorm = ((e.clientY - dragStartY) / Math.max(120, rect.height)) * sensitivity;
@@ -1646,27 +1883,46 @@
         edit.panX = Math.max(-1, Math.min(1, startPanX + dxNorm));
         edit.panY = Math.max(-1, Math.min(1, startPanY + dyNorm));
         syncCropSlidersFromCurrent();
-        renderPreview(true);
+        schedulePreviewRender(true);
       } else if (activeAppMode === 'collage') {
         const slot = collageState.slots[collageState.activeCellIdx];
         if (slot) {
           slot.panX = Math.max(-1, Math.min(1, startPanX + dxNorm));
           slot.panY = Math.max(-1, Math.min(1, startPanY + dyNorm));
-          renderPreview(true);
+          schedulePreviewRender(true);
         }
       }
     });
 
     function endCanvasDrag() {
+      clearLongPressTimer();
       if (!isDraggingCanvas) return;
       isDraggingCanvas = false;
-      renderPreview(false);
+
+      if (activeAppMode === 'collage' && collageState.swapDrag.active) {
+        const { fromIdx, overIdx } = collageState.swapDrag;
+        if (fromIdx >= 0 && overIdx >= 0 && fromIdx !== overIdx) {
+          // 2つの枠のスロット情報（写真・位置・ズーム）を丸ごと入れ替え
+          const temp = { ...collageState.slots[fromIdx] };
+          collageState.slots[fromIdx] = { ...collageState.slots[overIdx] };
+          collageState.slots[overIdx] = temp;
+          collageState.activeCellIdx = overIdx;
+          syncCollageZoomSlider();
+          renderThumbnails();
+        }
+        collageState.swapDrag.active = false;
+        collageState.swapDrag.fromIdx = -1;
+        collageState.swapDrag.overIdx = -1;
+        updateDefaultDragHint();
+      }
+
+      schedulePreviewRender(false);
     }
     previewCanvas.addEventListener('pointerup', endCanvasDrag);
     previewCanvas.addEventListener('pointercancel', endCanvasDrag);
 
     // ==========================================
-    // 書き出し・保存モーダル処理（全モード対応）
+    // 書き出し・保存モーダル処理（フル解像度書き出し）
     // ==========================================
     const exportModal = document.getElementById('exportModal');
     const exportProgressArea = document.getElementById('exportProgressArea');
