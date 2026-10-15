@@ -384,7 +384,7 @@
       <div class="px-3.5 py-2.5 border-b border-gray-800 text-xs font-semibold bg-gray-950/50 flex items-center justify-between shrink-0">
         <span class="text-blue-400 flex items-center gap-1.5">
           <i data-lucide="layout-grid" class="w-4 h-4"></i>
-          <span>コラージュ作成</span>
+          <span>コラージュ作成 (2400万画素出力)</span>
         </span>
         <button id="collageResetPosBtn" type="button" class="text-[11px] text-gray-400 hover:text-white bg-gray-800 hover:bg-gray-700 px-2.5 py-1 rounded-md transition flex items-center gap-1">
           <i data-lucide="rotate-ccw" class="w-3 h-3"></i>
@@ -512,7 +512,7 @@
       </div>
 
       <div id="exportActionsArea" class="space-y-2.5">
-        <p class="text-xs text-gray-400">元の高解像度を維持したまま書き出します（<span id="modalPhotoCount">1</span>枚）</p>
+        <p class="text-xs text-gray-400">高解像度で書き出します（<span id="modalPhotoCount">1</span>枚）</p>
         
         <button id="shareAllBtn" type="button" class="w-full bg-blue-600 hover:bg-blue-500 active:scale-[0.99] text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-lg transition text-sm">
           <i data-lucide="share" class="w-4 h-4"></i>
@@ -580,7 +580,15 @@
 
     let activeAppMode = 'frame'; // 'frame' | 'crop' | 'collage'
 
-    // 比率文字列と縦横向きから実効比率文字列（例: "4:3"）を返すヘルパー
+    // コラージュの基準総画素数：6000 × 4000 = 24,000,000 (2400万画素)
+    const COLLAGE_BASE_PIXELS = 6000 * 4000;
+
+    function getCollageOutputDimensions(aspect) {
+      const outW = Math.round(Math.sqrt(COLLAGE_BASE_PIXELS * aspect));
+      const outH = Math.round(Math.sqrt(COLLAGE_BASE_PIXELS / aspect));
+      return { outW, outH };
+    }
+
     function resolveRatioStr(baseStr, orientation) {
       const [a, b] = baseStr.split(':').map(Number);
       if (a === b) return '1:1';
@@ -591,7 +599,7 @@
 
     const cropState = {
       baseRatio: '4:5',
-      orientation: 'portrait', // 'portrait' | 'landscape'
+      orientation: 'portrait',
       get ratioStr() {
         return resolveRatioStr(this.baseRatio, this.orientation);
       },
@@ -670,7 +678,7 @@
     const clearAllBtn = document.getElementById('clearAllBtn');
     const extractedPaletteContainer = document.getElementById('extractedPaletteContainer');
 
-    // 軽量化用：プレビュー専用の縮小ビットマップキャンバス（長辺1200px）を生成
+    // 軽量化用：プレビュー専用の縮小ビットマップキャンバス（長辺1200px）
     function createFastPreviewProxy(img) {
       const maxDim = 1200;
       const w = img.naturalWidth;
@@ -687,7 +695,6 @@
       return c;
     }
 
-    // requestAnimationFrame による軽量描画スケジューラ
     let rafPending = false;
     let pendingOverlayState = false;
     function schedulePreviewRender(showOverlay = false) {
@@ -992,7 +999,6 @@
       const targetAspect = parseRatioString(cropState.ratioStr);
       const edit = getCropEdit(photoObj);
 
-      // フル解像度基準の出力ピクセル数
       let fullCropW, fullCropH;
       if (origW / origH > targetAspect) {
         fullCropH = origH;
@@ -1004,7 +1010,6 @@
       const outW = Math.round(fullCropW);
       const outH = Math.round(fullCropH);
 
-      // 描画元（プロキシまたは元画像）での切り抜き範囲計算
       let baseCropW, baseCropH;
       if (srcFullW / srcFullH > targetAspect) {
         baseCropH = srcFullH;
@@ -1037,6 +1042,8 @@
 
       const ctx = targetCanvas.getContext('2d');
       ctx.save();
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = isPreview ? 'medium' : 'high';
       ctx.drawImage(sourceImg, srcX, srcY, srcW, srcH, 0, 0, canvasW, canvasH);
 
       if (showGridOverlay) {
@@ -1055,7 +1062,7 @@
     }
 
     // ==========================================
-    // 3. コラージュ描画関数（軽量プロキシ & 長押し並び替え対応）
+    // 3. コラージュ描画関数（6000×4000=2400万画素ベース出力対応）
     // ==========================================
     function getActiveCollageLayout() {
       const list = COLLAGE_LAYOUTS[collageState.divisions] || COLLAGE_LAYOUTS[2];
@@ -1087,6 +1094,8 @@
       const srcY = (origH - srcH) / 2 - (slot.panY * maxOffsetY);
 
       ctx.save();
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = isPreview ? 'medium' : 'high';
       ctx.beginPath();
       ctx.rect(boxX, boxY, boxW, boxH);
       ctx.clip();
@@ -1096,16 +1105,24 @@
 
     function renderCollageCanvas(targetCanvas, isPreview = true) {
       const aspect = parseRatioString(collageState.ratioStr);
-      // プレビュー時は長辺960pxに抑えて超高速描画、書き出し時は3200pxの高解像度
-      const baseLongSide = isPreview ? 960 : 3200;
+      // 6000x4000 (24,000,000画素) ベースの目標出力サイズを算出
+      const { outW, outH } = getCollageOutputDimensions(aspect);
 
       let totalW, totalH;
-      if (aspect >= 1) {
-        totalW = baseLongSide;
-        totalH = Math.round(baseLongSide / aspect);
+      if (isPreview) {
+        // プレビュー操作時は長辺960pxで軽快に描画
+        const previewLongSide = 960;
+        if (aspect >= 1) {
+          totalW = previewLongSide;
+          totalH = Math.round(previewLongSide / aspect);
+        } else {
+          totalH = previewLongSide;
+          totalW = Math.round(previewLongSide * aspect);
+        }
       } else {
-        totalH = baseLongSide;
-        totalW = Math.round(baseLongSide * aspect);
+        // 書き出し時は2400万画素フルサイズで描画
+        totalW = outW;
+        totalH = outH;
       }
 
       if (targetCanvas.width !== totalW) targetCanvas.width = totalW;
@@ -1151,7 +1168,6 @@
         drawPhotoInCell(ctx, photoObj, slot, boxX, boxY, boxW, boxH, isPreview);
         ctx.restore();
 
-        // プレビュー時の枠線・番号表示
         if (isPreview) {
           const isSwapTarget = swap.active && swap.overIdx === idx && swap.overIdx !== swap.fromIdx;
           const isSelected = idx === collageState.activeCellIdx;
@@ -1159,7 +1175,7 @@
           if (isSwapTarget) {
             ctx.save();
             const strokeW = Math.max(4, Math.round(minSide * 0.008));
-            ctx.strokeStyle = '#f59e0b'; // 入れ替え先ターゲットはアンバー色
+            ctx.strokeStyle = '#f59e0b';
             ctx.lineWidth = strokeW;
             ctx.setLineDash([10, 6]);
             ctx.strokeRect(boxX + strokeW / 2, boxY + strokeW / 2, boxW - strokeW, boxH - strokeW);
@@ -1186,7 +1202,6 @@
         }
       });
 
-      // 長押し並び替え中：指の位置にドラッグ中の枠のミニチュアを浮遊描画
       if (isPreview && swap.active && renderedBoxes[swap.fromIdx]) {
         const srcBox = renderedBoxes[swap.fromIdx];
         const floatScale = 0.82;
@@ -1217,9 +1232,6 @@
       }
 
       ctx.restore();
-      const outLong = 3200;
-      const outW = aspect >= 1 ? outLong : Math.round(outLong * aspect);
-      const outH = aspect >= 1 ? Math.round(outLong / aspect) : outLong;
       return { totalW: outW, totalH: outH };
     }
 
@@ -1244,7 +1256,7 @@
         infoIndex.textContent = `${state.currentIndex + 1} / ${state.photos.length}枚目`;
       } else if (activeAppMode === 'collage') {
         const info = renderCollageCanvas(previewCanvas, true);
-        infoResolution.textContent = `コラージュ出力: ${info.totalW} × ${info.totalH}px (${collageState.ratioStr})`;
+        infoResolution.textContent = `コラージュ出力: ${info.totalW} × ${info.totalH}px (${collageState.ratioStr} / 24MP)`;
         infoIndex.textContent = `選択枠: ${collageState.activeCellIdx + 1} / ${collageState.divisions}`;
       }
     }
@@ -1511,7 +1523,7 @@
     });
 
     // ==========================================
-    // クロップモードのUI・イベント（比率縦横切替対応）
+    // クロップモードのUI・イベント
     // ==========================================
     const cropZoomSlider = document.getElementById('cropZoomSlider');
     const cropZoomLabel = document.getElementById('cropZoomLabel');
@@ -1607,7 +1619,7 @@
     });
 
     // ==========================================
-    // コラージュモードのUI・イベント（比率縦横切替・横4段対応）
+    // コラージュモードのUI・イベント
     // ==========================================
     const collageLayoutGrid = document.getElementById('collageLayoutGrid');
     const collageCellZoomSlider = document.getElementById('collageCellZoomSlider');
@@ -1823,7 +1835,6 @@
           renderThumbnails();
           schedulePreviewRender();
 
-          // 0.35秒長押しで枠の並び替えモードを起動
           longPressTimer = setTimeout(() => {
             collageState.swapDrag.active = true;
             collageState.swapDrag.fromIdx = hit.idx;
@@ -1855,14 +1866,12 @@
       if (!isDraggingCanvas || activeAppMode === 'frame' || !state.photos.length) return;
 
       const moveDist = Math.hypot(e.clientX - dragStartX, e.clientY - dragStartY);
-      // 長押し確定前に大きく動かした場合は通常の位置移動（パン）として扱う
       if (!collageState.swapDrag.active && moveDist > 10) {
         clearLongPressTimer();
       }
 
       const { x: canvasX, y: canvasY, rect } = clientToCanvasCoords(e.clientX, e.clientY);
 
-      // 長押し並び替えモード中の処理
       if (activeAppMode === 'collage' && collageState.swapDrag.active) {
         collageState.swapDrag.pointerX = canvasX;
         collageState.swapDrag.pointerY = canvasY;
@@ -1902,7 +1911,6 @@
       if (activeAppMode === 'collage' && collageState.swapDrag.active) {
         const { fromIdx, overIdx } = collageState.swapDrag;
         if (fromIdx >= 0 && overIdx >= 0 && fromIdx !== overIdx) {
-          // 2つの枠のスロット情報（写真・位置・ズーム）を丸ごと入れ替え
           const temp = { ...collageState.slots[fromIdx] };
           collageState.slots[fromIdx] = { ...collageState.slots[overIdx] };
           collageState.slots[overIdx] = temp;
@@ -1922,7 +1930,7 @@
     previewCanvas.addEventListener('pointercancel', endCanvasDrag);
 
     // ==========================================
-    // 書き出し・保存モーダル処理（フル解像度書き出し）
+    // 書き出し・保存モーダル処理（2400万画素フル解像度書き出し）
     // ==========================================
     const exportModal = document.getElementById('exportModal');
     const exportProgressArea = document.getElementById('exportProgressArea');
@@ -1953,12 +1961,12 @@
       if (activeAppMode === 'collage') {
         exportProgressCount.textContent = `1 / 1`;
         exportProgressBar.style.width = `100%`;
-        await new Promise(r => setTimeout(r, 30));
+        await new Promise(r => setTimeout(r, 40));
 
         renderCollageCanvas(workCanvas, false);
-        const blob = await new Promise(resolve => workCanvas.toBlob(resolve, 'image/jpeg', 0.95));
+        const blob = await new Promise(resolve => workCanvas.toBlob(resolve, 'image/jpeg', 0.96));
         const ratioSafe = collageState.ratioStr.replace(':', 'x');
-        results.push({ blob, filename: `collage_${ratioSafe}_${Date.now()}.jpg` });
+        results.push({ blob, filename: `collage_${ratioSafe}_${workCanvas.width}x${workCanvas.height}_${Date.now()}.jpg` });
         return results;
       }
 
